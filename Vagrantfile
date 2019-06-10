@@ -11,9 +11,11 @@ Vagrant.configure(2) do |config|
     d.vm.box = "bento/centos-7.6" 
     d.vm.hostname = "k8s-m1"
     d.vm.network "public_network", bridge: "eno4", ip: "192.168.57.160", auto_config: "false", netmask: "255.255.255.0" , gateway: "192.168.57.1"
-    d.vm.provision :shell, inline: " sudo route delete default; sudo route add default gw 192.168.57.1 dev enp0s8 " 
+    # IP address of your LAN's router 
+    default_router = "192.168.57.1"       
+    # change/ensure the default route via the local network's WAN router, useful for public_network/bridged mode
+    d.vm.provision :shell, inline: "ip route delete default 2>&1 >/dev/null || true; ip route add default via #{default_router}"
     d.vm.provision :shell, path: "scripts/bootstrap4CentOs_ansible.sh"   
-    d.vm.provision :shell, inline: "PYTHONUNBUFFERED=1 ansible-playbook /vagrant/ansible/cd.yml -c local"
     d.vm.provider "virtualbox" do |v|
       v.memory = 2048
       v.cpus = 2
@@ -21,8 +23,7 @@ Vagrant.configure(2) do |config|
   end
   (1..2).each do |i|
     config.vm.define "k8s-n#{i}" do |d|
-      d.vm.box = "bento/centos-7.6" 
-#     d.vm.box = "centos/7"
+      d.vm.box = "bento/centos-7.6"
       d.vm.hostname = "k8s-n#{i}" 
       d.vm.network "public_network", bridge: "eno4", gateway: "192.168.57.1" , ip: "192.168.57.16#{i}"  ,  netmask: "255.255.255.0" , auto_config: "false"
       # IP address of your LAN's router 
@@ -31,7 +32,8 @@ Vagrant.configure(2) do |config|
       d.vm.provision :shell, inline: "ip route delete default 2>&1 >/dev/null || true; ip route add default via #{default_router}"
       
       d.vm.provider "virtualbox" do |v|
-        v.memory = 1024
+        v.memory = 3096
+        v.cpus = 2
       end
     end
   end
