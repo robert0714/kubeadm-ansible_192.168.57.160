@@ -45,7 +45,7 @@ if [ ${HOST_NAME} == "k8s-m1" ]; then
   cd /vagrant
   set_hosts
   sudo cp ~/hosts /etc/
-  sudo ansible-playbook -e network_interface=eth1 site.yaml  -e DOCKER_API_VERSION=1.39  -i hosts.ini
+  sudo ansible-playbook -e network_interface=eth1  ansible/site.yaml  -e DOCKER_API_VERSION=1.39  -i ansible/hosts.ini
 else
   set_hosts
   sudo cp ~/hosts /etc/
