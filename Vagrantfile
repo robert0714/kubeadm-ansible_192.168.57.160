@@ -33,8 +33,8 @@ Vagrant.configure(2) do |config|
     d.vm.provision :shell, inline: "ip route delete default 2>&1 >/dev/null || true; ip route add default via #{default_router}"
     d.vm.provision :shell, path: "scripts/bootstrap4CentOs_ansible.sh"   
     d.vm.provider "virtualbox" do |v|
-      v.memory = 16384
-      v.cpus = 4
+      v.memory = 8192
+      v.cpus = 2
     end
   end
   if Vagrant.has_plugin?("vagrant-cachier")
