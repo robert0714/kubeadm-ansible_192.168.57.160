@@ -9,7 +9,7 @@ Vagrant.configure(2) do |config|
   end
   (1..2).each do |i|
     config.vm.define "k8s-n#{i}" do |d|
-      d.vm.box = "bento/centos-7.7"
+      d.vm.box = "bento/centos-7.8"
       d.vm.hostname = "k8s-n#{i}" 
       d.vm.network "public_network", bridge: "eno4", gateway: "192.168.57.1" , ip: "192.168.57.16#{i}"  ,  netmask: "255.255.255.0" , auto_config: "false"
       # IP address of your LAN's router 
